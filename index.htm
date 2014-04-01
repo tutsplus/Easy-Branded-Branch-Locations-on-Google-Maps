@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Branded Google Map Demo</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      .wrap { max-width: 75em; min-height: 40em; height:100%; width:100%; margin: 0 auto; padding-top: 2.5%;}
+      #map-canvas { height: 90%;border: 5px solid #33210f;
+      -moz-box-shadow: 0 3px 3px 3px rgba(0,0,0,0.9), 0 0 0 3px #000;
+      -webkit-box-shadow: 0 3px 3px 3px rgba(0,0,0,0.9), 0 0 0 3px #000;
+      box-shadow: 0 3px 3px 3px rgba(0,0,0,0.9), 0 0 0 3px #000;
+       }
+    </style>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+    <script type="text/javascript">
+      var map;
+      var centerPos = new google.maps.LatLng(-37.74723337588968,144.961341333252);
+      var zoomLevel = 12;
+
+      function LogoControl(controlDiv, map) {
+
+        controlDiv.style.padding = '5px';
+
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundImage = 'url(images/logo.png)';
+        controlUI.style.width = '600px';
+        controlUI.style.height = '116px';
+        controlUI.style.cursor = 'pointer';
+        controlUI.title = 'Click to set the map to Home';
+        controlDiv.appendChild(controlUI);
+
+        google.maps.event.addDomListener(controlUI, 'click', function() {
+          map.setCenter(centerPos)
+          map.setZoom(zoomLevel)
+        });
+
+      }
+
+      function initialize() {
+
+      var styles = [
+        {
+          "elementType": "geometry",
+          "stylers": [
+            { "hue": "#ffa200" },
+            { "invert_lightness": true },
+            { "lightness": 50 },
+            { "saturation": 35 },
+            { "gamma": 1.31 }
+          ]
+        },{
+          "elementType": "labels",
+          "stylers": [
+            { "hue": "#ffa200" }
+          ]
+        },{
+          "featureType": "water",
+          "elementType": "geometry",
+          "stylers": [
+            { "color": "#8F9B98" }
+          ]
+        },{
+          "elementType": "labels.text.fill",
+          "stylers": [
+            { "weight": 0.5 },
+            { "color": "#f8ead0" }
+          ]
+        },{
+          "elementType": "labels.text.stroke",
+          "stylers": [
+            { "color": "#6a5035" }
+          ]
+        },{
+          "featureType": "landscape.natural",
+          "elementType": "geometry",
+          "stylers": [
+            { "color": "#9c9743" }
+          ]
+        },{
+          "featureType": "landscape.man_made",
+          "elementType": "geometry",
+          "stylers": [
+            { "color": "#9f8053" }
+          ]
+        },{
+          "featureType": "poi",
+          "elementType": "geometry",
+          "stylers": [
+            { "color": "#ACA74C" }
+          ]
+        },{
+          "featureType": "road",
+          "elementType": "geometry.fill",
+          "stylers": [
+            { "color": "#d3b681" }
+          ]
+        },{
+          "featureType": "road",
+          "elementType": "geometry.stroke",
+          "stylers": [
+            { "color": "#644F34" }
+          ]
+        },{
+          "featureType": "road.arterial",
+          "elementType": "geometry.fill",
+          "stylers": [
+            { "color": "#c6a15e" }
+          ]
+        },{
+          "featureType": "road.local",
+          "elementType": "geometry.fill",
+          "stylers": [
+            { "color": "#b09061" }
+          ]
+        },{
+          "featureType": "transit.line",
+          "elementType": "geometry",
+          "stylers": [
+            { "color": "#876b48" }
+          ]
+        },{
+          "featureType": "transit.station",
+          "elementType": "geometry",
+          "stylers": [
+            { "color": "#a58557" }
+          ]
+        }
+      ];
+
+        var mapOptions = {
+          center: centerPos,
+          zoom: zoomLevel
+        };
+        
+        map = new google.maps.Map( document.getElementById("map-canvas"), mapOptions );
+
+        var locations = [
+          ['First Shoppe', -37.808204, 144.855579],
+          ['Second Shoppe', -37.675648, 145.026125],
+          ['Third Shoppe', -37.816935, 144.966877],
+          ['Fourth Shoppe', -37.818714, 145.036494],
+          ['Fifth Shoppe', -37.793834, 144.987018],
+          ['Sixth Shoppe', -37.737116, 144.998581],
+          ['Seventh Shoppe', -37.765528, 144.922624]
+        ];
+
+        var image = 'images/shoppe_icon.png';
+
+        for (i = 0; i < locations.length; i++) {  
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            title: locations[i][0],
+            map: map,
+            icon: image
+          });
+        }
+
+        var logoControlDiv = document.createElement('div');
+        var logoControl = new LogoControl(logoControlDiv, map);
+
+        logoControlDiv.index = 1;
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(logoControlDiv);
+
+        var styledMap = new google.maps.StyledMapType( styles, {name: "Styled Map"} );
+        map.mapTypes.set('map_style', styledMap);
+        map.setMapTypeId('map_style');
+
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+  <div class="wrap">
+    <div id="map-canvas"></div>
+
+    <!-- <button onclick="console.log(  'Lat &amp; Long: ' + map.getCenter().k + ',' + map.getCenter().A + ' Zoom: ' + map.getZoom() );">Get Map Co-ords</button> -->
+
+  </div>
+  </body>
+</html>
